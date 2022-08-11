@@ -1,0 +1,357 @@
+class Header
+{
+	gameType = Coop;
+	minPlayers = 1;
+	maxPlayers = 69; 
+};
+
+author = "Mr.Ben [Tour]";
+onLoadName = "[Tour] AAF Dynamic Xmass";
+briefingName = "[Tour] AAF Dynamic Missions (VX)";
+onLoadMission = "Dynamic Mission Creator";
+onLoadMissionTime = true;
+overviewPicture = "";
+loadScreen = "\a3\data_F\flags\flag_AAF_co.paa"; //Loading screen picture, should be 1024x512 pixels in .paa format.
+enableItemsDropping = 0;
+disabledAI = true; 
+enableDebugConsole = 1;
+
+respawn = 3;
+respawnDelay = 30;
+respawnDialog = 1;
+respawnTemplates[] = {"tickets"};
+respawnVehicleDelay = 30;
+
+#include "scripts\TOUR_IED\dlg\bombDefuseDlg.hpp"
+#include "scripts\TOUR_EXPLOSIVES\dlg\bombDefuseDlg.hpp"
+#include "scripts\TDMC\interface\hpp\creator.hpp"
+#include "scripts\TOUR_RC\dialog\hpp\admintool.hpp"
+#include "scripts\TOUR_SI\interface\hpp\interface.hpp"
+#include "scripts\TOUR_FieldRadio\TOUR_FieldRadio.hpp"
+
+class CfgFunctions {
+	#include "LARs\spawnComp\functions\functions.cpp"
+};
+
+#include "scripts\TDMC\compositions\compositions.cfg"
+
+class Params
+{
+	class TOUR_param_Respawn
+	{
+		//paramsArray[0]
+		title = "Respawn Time (s):";
+		values[] = {0, 30, 60, 300, 600, 900};
+		default = 30;
+		texts[] = {"None", "30 Seconds", "1 Minute", "5 Minutes", "10 Minutes", "15 Minutes"};
+	};
+	
+	class TOUR_param_tickets
+	{
+		//paramsArray[1]
+		title = "Lives:";
+		values[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100};
+		default = 1;
+		texts[] = {"1", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "20", "30", "40", "50", "100"};
+	};
+
+	class TOUR_param_viewDistance
+	{
+		//paramsArray[2]
+		title = "View Distance:";
+		values[] = {2500, 5000, 7500, 10000};
+		default = 2500;
+		texts[] = {"2500m", "5000m", "7500m", "10000m"};
+	};	
+};
+
+class CfgDebriefing
+{  
+	class kia
+	{
+		title = "Killed In Action";
+		subtitle = "KIA";
+		description = "All teammates were killed in action.";
+		pictureBackground = "img\USFlag.paa";
+		picture = "o_inf";
+		pictureColor[] = { 0.6,0.1,0.2,1 };
+	};
+};
+
+class CfgRadio
+{
+	sounds[] = {};
+
+	class TOUR_SV_Fixing
+	{
+	   name = "TOUR_SV_Fixing1";
+	   sound[] = {};
+	   title = "Just leave it here and we will take a look at it. It should only take few minutes!";
+	}; 
+
+	class TOUR_SV_noFix
+	{
+	   name = "TOUR_SV_noFix";
+	   sound[] = {};
+	   title = "Sorry we are unable to fix this kind of vehicle...";
+	}; 	
+	  
+	class TOUR_SV_Fixed
+	{
+	   name = "TOUR_SV_Fixed";
+	   sound[] = {};
+	   title = "Service complete, she is as good as new!";
+	}; 	
+
+	class TOUR_SI_chatRTB
+	{
+	   name = "TOUR_SI_chatRTB";
+	   sound[] = {};
+	   title = "Hey pilot, we need to RTB!";
+	}; 		
+	  
+	class TDMC_reportingback
+	{
+		name = "TDMC_reportingback";
+		sound[] = {};
+		title = "Sir, reporting back from op, Sir!";
+	}; 
+	
+	class TDMC_welcomeback
+	{
+		name = "TDMC_welcomeback";
+		sound[] = {};
+		title = "Welcome back, how did the mission go?";
+	};
+	
+	class TDMC_playernotgood
+	{
+		name = "TDMC_playernotgood";
+		sound[] = {};
+		title = "Not to well, we were unable to complete the objective, Sir.";
+	};  
+	
+	class TDMC_officernotgood
+	{
+		name = "TDMC_officernotgood";
+		sound[] = {};
+		title = "Pathetic... looks like you got yourself a whole lotta latrineduty soldier! Dismissed!";
+	};  
+	
+	class TDMC_playergood
+	{
+		name = "TDMC_playergood";
+		sound[] = {};
+		title = "We completed the objective, Sir!";
+	};
+	
+	class TDMC_officergood
+	{
+		name = "TDMC_officergood";
+		sound[] = {};
+		title = "Excellent! Your up for promotion, dismissed!";
+	};  
+	
+	class TDMC_gotthebastard
+	{
+		name = "TDMC_gotthebastard";
+		sound[] = {};
+		title = "Looks like we got the bastard!";
+	};  
+};
+
+class CfgSounds
+{
+	class bcg_wind
+	{
+		name = "bcg_wind";
+		sound[] = {"\sound\bcg_wind.ogg", 0.3, 1};
+		titles[] = {1, ""};
+	};
+	class bcg_wind_mild
+	{
+		name = "bcg_wind_mild";
+		sound[] = {"\sound\bcg_wind_mild.ogg", 0.05, 1};
+		titles[] = {1, ""};
+	};		
+	class rafala_1
+	{
+		name = "rafala_1";
+		sound[] = {"\sound\rafala_1.ogg",1,1};
+		titles[] = {1, ""};
+	};	
+	class rafala_2
+	{
+		name = "rafala_2";
+		sound[] = {"\sound\rafala_2.ogg",1,1};
+		titles[] = {1, ""};
+	};
+	class rafala_3
+	{
+		name = "rafala_3";
+		sound[] = {"\sound\rafala_3.ogg",1,1};
+		titles[] = {1, ""};
+	};	
+	class rafala_6
+	{
+		name = "rafala_6";
+		sound[] = {"\sound\rafala_6.ogg",1,1};
+		titles[] = {1, ""};
+	};	
+	class rafala_7
+	{
+		name = "rafala_7";
+		sound[] = {"\sound\rafala_7.ogg",1,1};
+		titles[] = {1, ""};
+	};	
+	class rafala_8
+	{
+		name = "rafala_8";
+		sound[] = {"\sound\rafala_8.ogg",1,1};
+		titles[] = {1, ""};
+	};	
+	class rafala_5
+	{
+		name = "rafala_9";
+		sound[] = {"\sound\rafala_9.ogg",1,1};
+		titles[] = {1, ""};
+	};
+	class tree_crack_1
+	{
+		name = "tree_crack_1";
+		sound[] = {"\sound\tree_crack_1.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};
+	class tree_crack_2
+	{
+		name = "tree_crack_2";
+		sound[] = {"\sound\tree_crack_2.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};
+	class tree_crack_3
+	{
+		name = "tree_crack_3";
+		sound[] = {"\sound\tree_crack_3.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};	
+	class tree_crack_4
+	{
+		name = "tree_crack_4";
+		sound[] = {"\sound\tree_crack_4.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};
+	class tree_crack_5
+	{
+		name = "tree_crack_5";
+		sound[] = {"\sound\tree_crack_5.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};
+	class tree_crack_6
+	{
+		name = "tree_crack_6";
+		sound[] = {"\sound\tree_crack_6.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};	
+	class tree_crack_7
+	{
+		name = "tree_crack_7";
+		sound[] = {"\sound\tree_crack_7.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};	
+	class tree_crack_8
+	{
+		name = "tree_crack_8";
+		sound[] = {"\sound\tree_crack_8.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};	
+	class tree_crack_9
+	{
+		name = "tree_crack_9";
+		sound[] = {"\sound\tree_crack_9.ogg", db+5, 1};
+		titles[] = {1, ""};
+	};
+	class lup_01
+	{
+		name = "lup_01";
+		sound[] = {"\sound\lup_01.ogg", 1, 1};
+		titles[] = {};
+	};
+	class lup_02
+	{
+		name = "lup_02";
+		sound[] = {"\sound\lup_02.ogg", 1, 1};
+		titles[] = {};
+	};
+	class lup_03
+	{
+		name = "lup_03";
+		sound[] = {"\sound\lup_03.ogg", 1, 1};
+		titles[] = {};
+	};
+	class tremurat_1
+	{
+		name = "tremurat_1";
+		sound[] = {"\sound\tremurat_1.ogg", 1, 1};
+		titles[] = {1, ""};
+	};
+	class tremurat_2
+	{
+		name = "tremurat_2";
+		sound[] = {"\sound\tremurat_2.ogg", 1, 1};
+		titles[] = {1, ""};
+	};
+	class tremurat_3
+	{
+		name = "tremurat_3";
+		sound[] = {"\sound\tremurat_3.ogg", 1, 1};
+		titles[] = {1, ""};
+	};
+	class tremurat_4
+	{
+		name = "tremurat_4";
+		sound[] = {"\sound\tremurat_4.ogg", 1, 1};
+		titles[] = {1, ""};
+	};	
+	class NoSound 
+	{
+		name = "NoSound";
+		sound[] = {"", 0, 1};
+		titles[] = {0, ""};
+	};	
+	class tuse_1
+	{
+		name = "tuse_1";
+		sound[] = {"\sound\tuse_1.ogg", 1, 1};
+		titles[] = {1, ""};
+	};
+	class tuse_2
+	{
+		name = "tuse_2";
+		sound[] = {"\sound\tuse_2.ogg", 1, 1};
+		titles[] = {1, ""};
+	};
+	class tuse_3
+	{
+		name = "tuse_3";
+		sound[] = {"\sound\tuse_3.ogg", 1, 1};
+		titles[] = {1, ""};
+	};
+	class tuse_4
+	{
+		name = "tuse_4";
+		sound[] = {"\sound\tuse_4.ogg", 1, 1};
+		titles[] = {1, ""};
+	};
+	class tuse_5
+	{
+		name = "tuse_5";
+		sound[] = {"\sound\tuse_5.ogg", 1, 1};
+		titles[] = {1, ""};
+	};
+	class tuse_6
+	{
+		name = "tuse_6";
+		sound[] = {"\sound\tuse_6.ogg", 1, 1};
+		titles[] = {1, ""};
+	};	
+};

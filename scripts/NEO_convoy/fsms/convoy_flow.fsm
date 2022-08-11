@@ -1,0 +1,342 @@
+/*%FSM<COMPILE "C:\Program Files (x86)\Bohemia Interactive\Tools\FSM Editor Personal Edition\scriptedFSM.cfg, convoy_flow">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"init",0,250,-23.342300,6.115829,66.657692,56.115829,0.000000,"init"};
+item1[] = {"always",4,218,-23.480350,76.947510,66.519653,126.947487,0.000000,"always"};
+item2[] = {"normal",2,250,-23.712229,154.269409,66.287796,204.269409,0.000000,"normal"};
+item3[] = {"high_distance",4,218,-23.712423,262.319855,66.287582,312.319855,0.000000,"high distance"};
+item4[] = {"slow_down",2,250,113.068192,262.319855,203.068207,312.319855,0.000000,"slow down"};
+item5[] = {"good_distance",4,218,113.692757,154.805557,203.692764,204.805557,0.000000,"good distance"};
+item6[] = {"convoy_destroyed",4,218,-34.262810,422.745087,55.737183,472.745087,90.000000,"convoy" \n "destroyed"};
+item7[] = {"_",1,250,-35.260277,511.577637,54.739723,561.577454,0.000000,""};
+item8[] = {"",7,210,154.182724,364.393951,162.182724,372.393951,0.000000,""};
+item9[] = {"",7,210,-91.657387,174.991806,-83.657387,182.991806,0.000000,""};
+item10[] = {"",7,210,-91.657379,364.393951,-83.657379,372.393951,0.000000,""};
+item11[] = {"exitOnDanger",4,218,-131.833588,422.745087,-41.833611,472.745087,80.000000,"exitOnDanger"};
+item12[] = {"__1",1,250,-131.874512,510.621094,-41.874489,560.621094,0.000000,""};
+item13[] = {"isNil",4,218,61.394318,422.744781,151.394440,472.744781,100.000000,"isNil"};
+item14[] = {"__2",1,250,60.396851,510.620850,150.396942,560.620728,0.000000,""};
+item15[] = {"at_end",4,4314,-228.448242,424.657959,-138.448242,474.657959,70.000000,"at end"};
+item16[] = {"__3",1,250,-229.445724,510.620789,-139.445694,560.620789,0.000000,""};
+link0[] = {0,1};
+link1[] = {1,2};
+link2[] = {2,3};
+link3[] = {2,9};
+link4[] = {3,4};
+link5[] = {4,5};
+link6[] = {4,8};
+link7[] = {5,2};
+link8[] = {6,7};
+link9[] = {8,10};
+link10[] = {9,10};
+link11[] = {10,6};
+link12[] = {10,11};
+link13[] = {10,13};
+link14[] = {10,15};
+link15[] = {11,12};
+link16[] = {13,14};
+link17[] = {15,16};
+globals[] = {0.000000,0,0,0,0,640,480,1,55,6316128,1,-497.246094,281.407043,760.415649,-82.327484,814,881,1};
+window[] = {2,-1,-1,-1,-1,787,50,1310,50,3,832};
+*//*%FSM</HEAD>*/
+class FSM
+{
+  fsmName = "convoy_flow";
+  class States
+  {
+    /*%FSM<STATE "init">*/
+    class init
+    {
+      name = "init";
+      init = /*%FSM<STATEINIT""">*/"private [""_list"", ""_vehicles"", ""_speed"", ""_endPos"", ""_maxDist"", ""_minVehicleDistance"", ""_maxVehicleDistance"", ""_exitOnDanger"", ""_inDanger""];" \n
+       "_list = NEO_convoy;" \n
+       "_vehicles = _list select 0;" \n
+       "_speed = _list select 1;" \n
+       "_endPos = _list select 2;" \n
+       "_maxDist = _list select 3;" \n
+       "_minVehicleDistance = _list select 4;" \n
+       "_maxVehicleDistance = _list select 5;" \n
+       "_exitOnDanger = _list select 6;" \n
+       "_inDanger = _list select 7;" \n
+       "" \n
+       "private [""_minSpeed"", ""_medSpeed"", ""_maxSpeed""];" \n
+       "_minSpeed = _speed select 0;" \n
+       "_medSpeed = _speed select 1;" \n
+       "_maxSpeed = _speed select 2;" \n
+       "" \n
+       "private [""_currentSpeed""];" \n
+       "_currentSpeed = 0;" \n
+       "" \n
+       "private [""_front"", ""_back"", ""_driver""];" \n
+       "_front = _vehicles select 0;" \n
+       "_back = _vehicles select (count _vehicles - 1);" \n
+       "_driver = driver _front;" \n
+       ""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "always">*/
+        class always
+        {
+          priority = 0.000000;
+          to="normal";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "normal">*/
+    class normal
+    {
+      name = "normal";
+      init = /*%FSM<STATEINIT""">*/"_currentSpeed = if (_inDanger) then { _maxSpeed } else { _medSpeed };" \n
+       "_driver forceSpeed _currentSpeed;" \n
+       ""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "isNil">*/
+        class isNil
+        {
+          priority = 100.000000;
+          to="__2";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"isNil { NEO_convoy }" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "convoy_destroyed">*/
+        class convoy_destroyed
+        {
+          priority = 90.000000;
+          to="_";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_list = NEO_convoy;" \n
+           "_vehicles = _list select 0;" \n
+           "" \n
+           "count _vehicles < 2" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "exitOnDanger">*/
+        class exitOnDanger
+        {
+          priority = 80.000000;
+          to="__1";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_exitOnDanger" \n
+           "&&" \n
+           "_inDanger" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "at_end">*/
+        class at_end
+        {
+          priority = 70.000000;
+          to="__3";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"count _endPos < 1" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "high_distance">*/
+        class high_distance
+        {
+          priority = 0.000000;
+          to="slow_down";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_list = NEO_convoy;" \n
+           "_vehicles = _list select 0;" \n
+           "_speed = _list select 1;" \n
+           "_endPos = _list select 2;" \n
+           "_maxDist = _list select 3;" \n
+           "_minVehicleDistance = _list select 4;" \n
+           "_maxVehicleDistance = _list select 5;" \n
+           "_exitOnDanger = _list select 6;" \n
+           "_inDanger = _list select 7;" \n
+           "" \n
+           "_minSpeed = _speed select 0;" \n
+           "_medSpeed = _speed select 1;" \n
+           "_maxSpeed = _speed select 2;" \n
+           "" \n
+           "_front = _vehicles select 0;" \n
+           "_back = _vehicles select (count _vehicles - 1);" \n
+           "_driver = driver _front;" \n
+           "" \n
+           "//ForceSpeed" \n
+           "_currentSpeed = if (_inDanger) then { _maxSpeed } else { _medSpeed };" \n
+           "_driver forceSpeed _currentSpeed;" \n
+           "" \n
+           "private [""_2dDistance""];" \n
+           "_2dDistance = [_front, _back] call BIS_fnc_distance2D;" \n
+           "" \n
+           "_2dDistance > _maxDist" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "slow_down">*/
+    class slow_down
+    {
+      name = "slow_down";
+      init = /*%FSM<STATEINIT""">*/"//_currentSpeed = if (_inDanger) then { _medSpeed } else { _minSpeed };" \n
+       "_currentSpeed = _minSpeed;" \n
+       "_driver forceSpeed _currentSpeed;" \n
+       ""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+        /*%FSM<LINK "isNil">*/
+        class isNil
+        {
+          priority = 100.000000;
+          to="__2";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"isNil { NEO_convoy }" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "convoy_destroyed">*/
+        class convoy_destroyed
+        {
+          priority = 90.000000;
+          to="_";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_list = NEO_convoy;" \n
+           "_vehicles = _list select 0;" \n
+           "" \n
+           "count _vehicles < 2" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "exitOnDanger">*/
+        class exitOnDanger
+        {
+          priority = 80.000000;
+          to="__1";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_exitOnDanger" \n
+           "&&" \n
+           "_inDanger" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "at_end">*/
+        class at_end
+        {
+          priority = 70.000000;
+          to="__3";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"count _endPos < 1" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+        /*%FSM<LINK "good_distance">*/
+        class good_distance
+        {
+          priority = 0.000000;
+          to="normal";
+          precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+          condition=/*%FSM<CONDITION""">*/"_list = NEO_convoy;" \n
+           "_vehicles = _list select 0;" \n
+           "_speed = _list select 1;" \n
+           "_endPos = _list select 2;" \n
+           "_maxDist = _list select 3;" \n
+           "_minVehicleDistance = _list select 4;" \n
+           "_maxVehicleDistance = _list select 5;" \n
+           "_exitOnDanger = _list select 6;" \n
+           "_inDanger = _list select 7;" \n
+           "" \n
+           "_minSpeed = _speed select 0;" \n
+           "_medSpeed = _speed select 1;" \n
+           "_maxSpeed = _speed select 2;" \n
+           "" \n
+           "_front = _vehicles select 0;" \n
+           "_back = _vehicles select (count _vehicles - 1);" \n
+           "_driver = driver _front;" \n
+           "" \n
+           "//ForceSpeed" \n
+           "_currentSpeed = if (_inDanger) then { _medSpeed } else { _minSpeed };" \n
+           "_driver forceSpeed _currentSpeed;" \n
+           "" \n
+           "private [""_2dDistance""];" \n
+           "_2dDistance = [_front, _back] call BIS_fnc_distance2D;" \n
+           "" \n
+           "_2dDistance <= _maxDist" \n
+           ""/*%FSM</CONDITION""">*/;
+          action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+        };
+        /*%FSM</LINK>*/
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "_">*/
+    class _
+    {
+      name = "_";
+      init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "__1">*/
+    class __1
+    {
+      name = "__1";
+      init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "__2">*/
+    class __2
+    {
+      name = "__2";
+      init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+      };
+    };
+    /*%FSM</STATE>*/
+    /*%FSM<STATE "__3">*/
+    class __3
+    {
+      name = "__3";
+      init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+      precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+      class Links
+      {
+      };
+    };
+    /*%FSM</STATE>*/
+  };
+  initState="init";
+  finalStates[] =
+  {
+    "_",
+    "__1",
+    "__2",
+    "__3",
+  };
+};
+/*%FSM</COMPILE>*/
